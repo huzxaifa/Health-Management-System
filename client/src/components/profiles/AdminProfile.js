@@ -18,7 +18,7 @@ const AdminProfile = () => {
   });
 
   console.log('Received User Data:', userData);
-
+  
   return (
     <div>
       {/* <h1>Admin Profile</h1>

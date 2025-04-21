@@ -204,6 +204,7 @@ app.get('/api/users/:userId', async (req, res) => {
   }
 });
 
+
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
         //return success messAge:
@@ -369,7 +370,6 @@ app.get('/doctor/:doctorId/available_dates', async (req, res) => {
 });
 
 
-// Doctor Signup Route
 // Doctor Signup Route
 app.post('/api/signup/doctor', async (req, res) => {
   try {

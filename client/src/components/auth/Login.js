@@ -9,6 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import { makeStyles } from '@mui/styles';
 import Typography from '@mui/material/Typography';
+import { setAuthToken } from '../../utils/auth';
 
 const useStyles = makeStyles({
     root: {
@@ -44,24 +45,20 @@ const Login = ({ selectedOption }) => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
         try {
-            const response = await axios.post('http://localhost:3000/api/login', formData);
-
-            // Handle successful login and get user data
-            const userData = response.data;
-            console.log('User Data:', userData);
-
-            let optval = "/" + selectedOption + "Profile";
-            console.log(optval);
-            // Navigate to the next page with user data
-            navigate(optval, { state: { user: userData } });
-
+          const response = await axios.post('http://localhost:3000/api/login', formData);
+          
+          // Store token
+          localStorage.setItem('token', response.data.token);
+          console.log('JWT Token:', localStorage.getItem('token'));
+          
+          // Redirect based on role - MATCHING YOUR ROUTE PATHS
+          const redirectPath = `/${response.data.user.role}Profile`; // "AdminProfile", "DoctorProfile", etc.
+          navigate(redirectPath, { state: { user: response.data.user } });
+          
         } catch (error) {
-            // Handle error
-            console.error('Login error occurred:', error);
-            // Optionally, show an alert or error message
-            alert('Login failed. Please check your credentials.');
+          console.error('Login error:', error);
+          alert('Login failed. Please check your credentials.');
         }
     };
 

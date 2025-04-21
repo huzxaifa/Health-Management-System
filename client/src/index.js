@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import App from './App.js';
+import ProtectedRoute from './components/ProtectedRoute';
 
-import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -30,6 +31,7 @@ import ManageSchedule from './components/profiles/Doctor/ManageSchedule.js';
 //Admin
 import Appointment from './components/profiles/Admin/AppointmentAdmin.js';
 import ViewDoctor from './components/profiles/Admin/ViewDoctorsAdmin.js';
+import ViewPatients from './components/profiles/Admin/AdminViewPatients.js';
 
 function Root() {
   const [selectedOption, setSelectedOption] = useState('');
@@ -43,35 +45,87 @@ function Root() {
     setSelectedSignup(option);
 
   };
+
   return (
     <React.StrictMode>
       <Router>
         <Routes>
-        {/* <Route path="/" element={<Home/>}/> */}
+          {/* Public routes */}
           <Route path="/" element={<Options onOptionChange={handleOptionChange} />} />
           <Route path="/login" element={<Login onSignupChange={handleSignup} selectedOption={selectedOption} />} />
           <Route path="/DoctorSignup" element={<DoctorSignup />} />
           <Route path="/ClientSignup" element={<ClientSignup />} />
           <Route path="/AdminSignup" element={<AdminSignup />} />
-          {/* Profiles */}
-          <Route path="/AdminProfile" element={<AdminProfile />} />
-          <Route path="/ClientProfile" element={<ClientProfile />} />
-          <Route path="/DoctorProfile" element={<DoctorProfile />} />
-          {/* Client functionalities */}
-          <Route path="/profile/appointments" element={<Appointments />} />
-          <Route path="/profile/medical-records" element={<MedicalRecords />} />
-          <Route path="/client/add-record" element={<AddRecord />} />
-          <Route path="/client/add-record/ClientProfile" element={<ClientProfile />} />
-          {/* <Route path="/client/book-appointment" element={<ClientBookAppointment />} /> */}
-          {/* Doctor functionalities */}
-          <Route path="/doctorProfile/appointments" element={<AppointmentDoctor />} />
-          <Route path="/doctorProfile/manageSchedule" element={<ManageSchedule/>} />
 
-          <Route path="/doctors" element={<ViewDoctor />} />
-          <Route path="/appointments/:doctorId" element={<Appointment />} />
+          {/* Protected routes - Admin */}
+          <Route path="/AdminProfile" element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminProfile />
+            </ProtectedRoute>
+          } />
+          
+          {/* Protected routes - Client */}
+          <Route path="/ClientProfile" element={
+            <ProtectedRoute requiredRole="client">
+              <ClientProfile />
+            </ProtectedRoute>
+          } />
+          
+          {/* Protected routes - Doctor */}
+          <Route path="/DoctorProfile" element={
+            <ProtectedRoute requiredRole="doctor">
+              <DoctorProfile />
+            </ProtectedRoute>
+          } />
+
+          {/* Protected client functionalities */}
+          <Route path="/profile/appointments" element={
+            <ProtectedRoute requiredRole="client">
+              <Appointments />
+            </ProtectedRoute>
+          } />
+          <Route path="/profile/medical-records" element={
+            <ProtectedRoute requiredRole="client">
+              <MedicalRecords />
+            </ProtectedRoute>
+          } />
+          <Route path="/client/add-record" element={
+            <ProtectedRoute requiredRole="client">
+              <AddRecord />
+            </ProtectedRoute>
+          } />
+
+          {/* Protected doctor functionalities */}
+          <Route path="/doctorProfile/appointments" element={
+            <ProtectedRoute requiredRole="doctor">
+              <AppointmentDoctor />
+            </ProtectedRoute>
+          } />
+          <Route path="/doctorProfile/manageSchedule" element={
+            <ProtectedRoute requiredRole="doctor">
+              <ManageSchedule />
+            </ProtectedRoute>
+          } />
+
+          {/* Protected admin functionalities */}
+          <Route path="/doctors" element={
+            <ProtectedRoute requiredRole="admin">
+              <ViewDoctor />
+            </ProtectedRoute>
+          } />
+          <Route path="/appointments/:doctorId" element={
+            <ProtectedRoute requiredRole="admin">
+              <Appointment />
+            </ProtectedRoute>
+          } />
+          <Route path="/patients" element={
+            <ProtectedRoute requiredRole="admin">
+              <ViewPatients />
+            </ProtectedRoute>
+          } />
         </Routes>
       </Router>
-      {/*<App selectedOption={selectedOption} />*/}
+
     </React.StrictMode>
   );
 }

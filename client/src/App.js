@@ -13,6 +13,7 @@ function App() {
       setJsonData(jsonData);
     };
     fetchData();
+    console.log('Initial Token Check:', localStorage.getItem('token'));
   }, []);
 
   return (
@@ -21,7 +22,7 @@ function App() {
         <header className="App-header">
           <h1>My First MERN App</h1>
         </header>
-        
+
         {/* <Switch>
           { Login Routes }
           <Route path="/auth/doctor" render={() => <LoginForm role="Doctor" />} />
